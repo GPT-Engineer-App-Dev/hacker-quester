@@ -4,7 +4,8 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Info } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const fetchTopStories = async () => {
   const response = await fetch('https://hn.algolia.com/api/v1/search?tags=front_page&hitsPerPage=100');
@@ -70,7 +71,12 @@ const Index = () => {
         className={`custom-cursor ${isClicking ? 'clicking' : ''}`}
         style={{ left: `${cursorPosition.x}px`, top: `${cursorPosition.y}px` }}
       />
-      <h1 className="text-4xl font-bold mb-8 text-center text-primary glow flicker">Top 100 Hacker News Stories</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-bold text-primary glow flicker">Top 100 Hacker News Stories</h1>
+        <Link to="/about" className="text-primary hover:text-primary-foreground">
+          <Info className="h-6 w-6" />
+        </Link>
+      </div>
       
       <div className="mb-6 flex justify-center">
         <Input
