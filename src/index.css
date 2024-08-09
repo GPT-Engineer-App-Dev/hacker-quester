@@ -80,31 +80,40 @@
 }
 
 .custom-cursor {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   border: 2px solid #00ff00;
   border-radius: 50%;
   position: fixed;
   pointer-events: none;
   z-index: 9999;
-  mix-blend-mode: difference;
   transition: transform 0.2s ease;
+  box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
 }
 
 .custom-cursor::after {
   content: '';
-  width: 4px;
-  height: 4px;
+  width: 6px;
+  height: 6px;
   background: #00ff00;
   border-radius: 50%;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  box-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
 }
 
 .custom-cursor.clicking {
   transform: scale(0.8);
+}
+
+body {
+  cursor: none;
+}
+
+a, button, input, select, textarea {
+  cursor: none;
 }
 
 .card-hover {

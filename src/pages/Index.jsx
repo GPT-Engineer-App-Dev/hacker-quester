@@ -17,8 +17,6 @@ const fetchTopStories = async () => {
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-  const [isClicking, setIsClicking] = useState(false);
   const searchInputRef = useRef(null);
   const { data, isLoading, error } = useQuery({
     queryKey: ['topStories'],
@@ -28,25 +26,6 @@ const Index = () => {
   const filteredStories = data?.hits.filter(story =>
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setCursorPosition({ x: e.clientX, y: e.clientY });
-    };
-
-    const handleMouseDown = () => setIsClicking(true);
-    const handleMouseUp = () => setIsClicking(false);
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mousedown', handleMouseDown);
-    document.addEventListener('mouseup', handleMouseUp);
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mousedown', handleMouseDown);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, []);
 
   useEffect(() => {
     const typingEffect = async () => {
@@ -67,10 +46,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen p-8 bg-background text-foreground matrix-bg">
-      <div
-        className={`custom-cursor ${isClicking ? 'clicking' : ''}`}
-        style={{ left: `${cursorPosition.x}px`, top: `${cursorPosition.y}px` }}
-      />
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-4xl font-bold text-primary glow flicker">Top 100 Hacker News Stories</h1>
         <Link to="/about" className="text-primary hover:text-primary-foreground">
