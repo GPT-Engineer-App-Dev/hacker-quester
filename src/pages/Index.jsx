@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ExternalLink, Info } from 'lucide-react';
+import { ExternalLink, Info, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Comments from '../components/Comments';
 
 const fetchTopStories = async () => {
   const response = await fetch('https://hn.algolia.com/api/v1/search?tags=front_page&hitsPerPage=100');
@@ -67,16 +68,19 @@ const Index = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-2">Upvotes: {story.points}</p>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    asChild
-                    className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                  >
-                    <a href={story.url} target="_blank" rel="noopener noreferrer">
-                      Read More <ExternalLink className="ml-2 h-4 w-4" />
-                    </a>
-                  </Button>
+                  <div className="flex space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      asChild
+                      className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                    >
+                      <a href={story.url} target="_blank" rel="noopener noreferrer">
+                        Read More <ExternalLink className="ml-2 h-4 w-4" />
+                      </a>
+                    </Button>
+                    <Comments storyId={story.objectID} />
+                  </div>
                 </CardContent>
               </Card>
             ))}
