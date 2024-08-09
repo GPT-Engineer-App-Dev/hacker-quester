@@ -28,8 +28,8 @@ const Index = () => {
   if (error) return <div className="text-center text-red-500">An error occurred: {error.message}</div>;
 
   return (
-    <div className="min-h-screen p-8 bg-gray-100">
-      <h1 className="text-4xl font-bold mb-8 text-center">Top 100 Hacker News Stories</h1>
+    <div className="min-h-screen p-8 bg-background text-foreground matrix-bg">
+      <h1 className="text-4xl font-bold mb-8 text-center text-primary glow">Top 100 Hacker News Stories</h1>
       
       <div className="mb-6 flex justify-center">
         <Input
@@ -37,34 +37,35 @@ const Index = () => {
           placeholder="Search stories..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-md"
+          className="max-w-md bg-card text-card-foreground border-primary"
         />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {isLoading
           ? Array(12).fill().map((_, index) => (
-              <Card key={index} className="w-full">
+              <Card key={index} className="w-full bg-card border-primary">
                 <CardHeader>
-                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-3/4 bg-secondary" />
                 </CardHeader>
                 <CardContent>
-                  <Skeleton className="h-4 w-1/4 mb-2" />
-                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-4 w-1/4 mb-2 bg-secondary" />
+                  <Skeleton className="h-4 w-1/2 bg-secondary" />
                 </CardContent>
               </Card>
             ))
           : filteredStories.map((story) => (
-              <Card key={story.objectID} className="w-full">
+              <Card key={story.objectID} className="w-full bg-card border-primary">
                 <CardHeader>
-                  <CardTitle className="text-lg">{story.title}</CardTitle>
+                  <CardTitle className="text-lg text-primary glow">{story.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-gray-500 mb-2">Upvotes: {story.points}</p>
+                  <p className="text-sm text-muted-foreground mb-2">Upvotes: {story.points}</p>
                   <Button
                     variant="outline"
                     size="sm"
                     asChild
+                    className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                   >
                     <a href={story.url} target="_blank" rel="noopener noreferrer">
                       Read More <ExternalLink className="ml-2 h-4 w-4" />
