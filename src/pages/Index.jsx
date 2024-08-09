@@ -17,6 +17,7 @@ const fetchTopStories = async () => {
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [title, setTitle] = useState('');
   const searchInputRef = useRef(null);
   const { data, isLoading, error } = useQuery({
     queryKey: ['topStories'],
@@ -29,17 +30,29 @@ const Index = () => {
 
   useEffect(() => {
     const typingEffect = async () => {
+      const text = "Top 100 Hacker News Stories";
+      for (let i = 0; i <= text.length; i++) {
+        setTitle(text.slice(0, i));
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    };
+
+    typingEffect();
+  }, []);
+
+  useEffect(() => {
+    const searchTypingEffect = async () => {
       const text = "Search hacker stories...";
       for (let i = 0; i <= text.length; i++) {
         setSearchTerm(text.slice(0, i));
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 50));
       }
       await new Promise(resolve => setTimeout(resolve, 1000));
       setSearchTerm('');
       searchInputRef.current?.focus();
     };
 
-    typingEffect();
+    searchTypingEffect();
   }, []);
 
   if (error) return <div className="text-center text-red-500">An error occurred: {error.message}</div>;
@@ -47,7 +60,7 @@ const Index = () => {
   return (
     <div className="min-h-screen p-8 bg-background text-foreground matrix-bg">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold text-primary glow flicker">Top 100 Hacker News Stories</h1>
+        <h1 className="text-4xl font-bold text-primary glow flicker typing-effect">{title}</h1>
         <Link to="/about" className="text-primary hover:text-primary-foreground">
           <Info className="h-6 w-6" />
         </Link>
@@ -60,7 +73,7 @@ const Index = () => {
           placeholder="Search stories..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-md bg-card text-card-foreground border-primary typing-effect"
+          className="max-w-md bg-card text-card-foreground border-primary terminal-input"
         />
       </div>
 
@@ -69,7 +82,7 @@ const Index = () => {
           ? Array(12).fill().map((_, index) => (
               <Card key={index} className="w-full bg-card border-primary card-hover">
                 <CardHeader>
-                  <Skeleton className="h-4 w-3/4 bg-secondary" />
+                  <Skeleton className="h-4 w-3/4 bg-secondary loading" />
                 </CardHeader>
                 <CardContent>
                   <Skeleton className="h-4 w-1/4 mb-2 bg-secondary" />
@@ -83,12 +96,13 @@ const Index = () => {
                   <CardTitle className="text-lg text-primary glow">{story.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground mb-2">Upvotes: {story.points}</p>
+                  <p className="text-sm text-muted-foreground mb-2 pulse">Upvotes: {story.points}</p>
                   <Button
                     variant="outline"
                     size="sm"
                     asChild
-                    className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                    className="border-primary text-primary hover:bg-primary hover:text-primary-foreground glitch"
+                    data-text="Read More"
                   >
                     <a href={story.url} target="_blank" rel="noopener noreferrer">
                       Read More <ExternalLink className="ml-2 h-4 w-4" />
