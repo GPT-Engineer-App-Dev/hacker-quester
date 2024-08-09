@@ -213,22 +213,3 @@ a, button, input, select, textarea {
   color: #00ff00;
 }
 
-@keyframes loading {
-  0% {
-    content: 'Loading';
-  }
-  25% {
-    content: 'Loading.';
-  }
-  50% {
-    content: 'Loading..';
-  }
-  75% {
-    content: 'Loading...';
-  }
-}
-
-.loading::after {
-  content: 'Loading';
-  animation: loading 1s infinite;
-}
