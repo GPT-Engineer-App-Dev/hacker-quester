@@ -1,10 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Github, Twitter } from "lucide-react"
+import { Github, Twitter, Home } from "lucide-react"
+import { Link } from "react-router-dom"
+import { Button } from "@/components/ui/button"
 
 const About = () => {
   return (
     <div className="min-h-screen p-8 bg-background text-foreground matrix-bg">
-      <h1 className="text-4xl font-bold mb-8 text-center text-primary glow flicker">About Hacker News Reader</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-bold text-primary glow flicker">About Hacker News Reader</h1>
+        <Link to="/">
+          <Button variant="outline" size="icon" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+            <Home className="h-4 w-4" />
+          </Button>
+        </Link>
+      </div>
       
       <Card className="max-w-2xl mx-auto bg-card border-primary">
         <CardHeader>
