@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -16,6 +16,9 @@ const fetchTopStories = async () => {
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [isClicking, setIsClicking] = useState(false);
+  const searchInputRef = useRef(null);
   const { data, isLoading, error } = useQuery({
     queryKey: ['topStories'],
     queryFn: fetchTopStories,
@@ -25,26 +28,65 @@ const Index = () => {
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
 
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setCursorPosition({ x: e.clientX, y: e.clientY });
+    };
+
+    const handleMouseDown = () => setIsClicking(true);
+    const handleMouseUp = () => setIsClicking(false);
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mousedown', handleMouseDown);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mousedown', handleMouseDown);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, []);
+
+  useEffect(() => {
+    const typingEffect = async () => {
+      const text = "Search hacker stories...";
+      for (let i = 0; i <= text.length; i++) {
+        setSearchTerm(text.slice(0, i));
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setSearchTerm('');
+      searchInputRef.current?.focus();
+    };
+
+    typingEffect();
+  }, []);
+
   if (error) return <div className="text-center text-red-500">An error occurred: {error.message}</div>;
 
   return (
     <div className="min-h-screen p-8 bg-background text-foreground matrix-bg">
-      <h1 className="text-4xl font-bold mb-8 text-center text-primary glow">Top 100 Hacker News Stories</h1>
+      <div
+        className={`custom-cursor ${isClicking ? 'clicking' : ''}`}
+        style={{ left: `${cursorPosition.x}px`, top: `${cursorPosition.y}px` }}
+      />
+      <h1 className="text-4xl font-bold mb-8 text-center text-primary glow flicker">Top 100 Hacker News Stories</h1>
       
       <div className="mb-6 flex justify-center">
         <Input
+          ref={searchInputRef}
           type="text"
           placeholder="Search stories..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-md bg-card text-card-foreground border-primary"
+          className="max-w-md bg-card text-card-foreground border-primary typing-effect"
         />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {isLoading
           ? Array(12).fill().map((_, index) => (
-              <Card key={index} className="w-full bg-card border-primary">
+              <Card key={index} className="w-full bg-card border-primary card-hover">
                 <CardHeader>
                   <Skeleton className="h-4 w-3/4 bg-secondary" />
                 </CardHeader>
@@ -55,7 +97,7 @@ const Index = () => {
               </Card>
             ))
           : filteredStories.map((story) => (
-              <Card key={story.objectID} className="w-full bg-card border-primary">
+              <Card key={story.objectID} className="w-full bg-card border-primary card-hover">
                 <CardHeader>
                   <CardTitle className="text-lg text-primary glow">{story.title}</CardTitle>
                 </CardHeader>
